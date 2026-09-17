@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>事務電卓 サポート</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+    max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; line-height: 1.8;
+  }
+  h1 { border-bottom: 3px solid #1F293A; padding-bottom: .4rem; }
+  h2 { margin-top: 2.5rem; color: #4E6A3A; }
+  footer { margin-top: 4rem; font-size: .85rem; opacity: .7; }
+  a { color: #3F6FD6; }
+  dt { font-weight: bold; margin-top: 1rem; }
+  @media (prefers-color-scheme: dark) { h1 { border-color: #8FA3C4; } h2 { color: #A8C48A; } }
+</style>
+</head>
+<body>
+<h1>事務電卓 サポート</h1>
+<p>事務電卓は、机の上の実務電卓と同じ使い勝手を iPhone / iPad / Mac に持ち込んだ電卓です。押した順に左から計算し、税込・税抜、%（割引・割増）、メモリー（M+ M- MR MC）、累計（GT）、00 キーを備えています。計算した数字はワンタップでコピーでき、他のアプリで使った数字を貼り付けて続きの計算もできます。</p>
+
+<h2>使い方</h2>
+<ol>
+  <li>数字と四則演算のキーで計算します。優先順位は無く、押した順に左から計算します。「=」を続けて押すと直前の演算を繰り返します（定数計算）。</li>
+  <li>「税込」「税抜」で、表示中の数字に税率を掛けた（割った）金額を出します。もう一度押すと税額に切り替わります。税率は「税率」キーで切り替え、登録・削除は「メニュー」の「税率（%）」で行います。</li>
+  <li>「コピー」で表示中の数字を 3 桁区切りなしでコピーします。「貼り付け」でクリップボードの数字を表示に入れます（「,」「¥」「円」は取り除いて読みます）。</li>
+  <li>「戻る」で、計算結果が変わる直前の状態に 1 つずつ戻せます。</li>
+  <li>「メニュー」から、計算の履歴、小数点以下の桁数と端数処理、税率、配色、キーの説明が見られます。</li>
+</ol>
+
+<h2>よくある質問</h2>
+<dl>
+  <dt>Q. 2 + 3 × 4 が 20 になります</dt>
+  <dd>A. 実務電卓と同じく、優先順位を付けずに押した順に計算する仕様です。2 + (3 × 4) を求めたいときは 3 × 4 を先に計算してから 2 を足してください。</dd>
+  <dt>Q. 「貼り付け」を押すと「ペーストを許可しますか」と聞かれます</dt>
+  <dd>A. iPhone / iPad では、他のアプリでコピーした内容を読むときに OS が確認を出します。アプリ側では止められません。毎回聞かれないようにするには、iPhone / iPad の「設定」で「事務電卓」を開き、「ほかのAppからペースト」を「許可」にしてください。</dd>
+  <dt>Q. 液晶の左上にクリップボードの数字を自動で出したい（iPhone / iPad）</dt>
+  <dd>A. 上の設定を「許可」にしたうえで、「メニュー」の「クリップボードの数字を自動で表示」をオンにしてください。Mac では設定なしで自動で表示されます。</dd>
+  <dt>Q. 割り算の結果が思ったより粗い</dt>
+  <dd>A. 「メニュー」で小数点以下の桁数を指定すると、途中の結果もその桁数に丸めます（実務電卓と同じ動きです）。細かい結果が欲しいときは桁数を「F」にしてください。</dd>
+  <dt>Q. アプリを開き直すと表示が 0 に戻っています</dt>
+  <dd>A. 仕様です。計算の状態と履歴は保存せず、起動するたびに 0 から始まります。税率や桁数などの設定は保存されます。</dd>
+  <dt>Q. 表示が E になりました</dt>
+  <dd>A. 12 桁を超えたか、0 で割ったときのエラー表示です。「AC」か「C」で解除してください。</dd>
+</dl>
+
+<h2>お問い合わせ</h2>
+<p>不具合のご報告やご要望は <a href="mailto:emc.hs07@gmail.com">emc.hs07@gmail.com</a> までお寄せください。</p>
+<p><a href="privacy.html">プライバシーポリシー</a></p>
+
+<footer>© 2026 Hideki Sato — 事務電卓</footer>
+</body>
+</html>
