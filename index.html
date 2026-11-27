@@ -10,20 +10,131 @@
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "事務電卓", "operatingSystem": "iOS, iPadOS, macOS", "applicationCategory": "UtilitiesApplication", "description": "机の上の実務電卓と同じ使い勝手。税込・税抜・GT・メモリー、勤務時間や支払期日の計算も。", "url": "https://emchs07-prog.github.io/jimudentaku-support/", "author": {"@type": "Person", "name": "Hideki Sato", "url": "https://emchs07-prog.github.io/"}, "downloadUrl": "https://apps.apple.com/jp/app/id6813061061"}</script>
 <!-- 検索向けの設定（ここまで） -->
 <style>
-  :root { color-scheme: light dark; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
-    max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; line-height: 1.8;
+  :root {
+    color-scheme: light dark;
+    --bg:#ffffff; --bg2:#f5f7fb; --card:#ffffff; --text:#14171f; --mute:#5b6475; --line:#e3e7ef;
+    --accent:#5b8a2e; --accent2:#4f74b8; --code:#0b0d12; --codetext:#e8ecf3; --shadow:0 10px 30px rgba(20,30,60,.08);
   }
-  h1 { border-bottom: 3px solid #1F293A; padding-bottom: .4rem; }
-  h2 { margin-top: 2.5rem; color: #4E6A3A; }
-  footer { margin-top: 4rem; font-size: .85rem; opacity: .7; }
-  a { color: #3F6FD6; }
-  dt { font-weight: bold; margin-top: 1rem; }
-  .download { display: inline-block; margin: .5rem 0 1rem; padding: .7rem 1.4rem; border-radius: 10px;
-    background: #1F293A; color: #fff; text-decoration: none; font-weight: bold; }
-  .note { font-size: .9rem; opacity: .8; }
-  @media (prefers-color-scheme: dark) { h1 { border-color: #8FA3C4; } h2 { color: #A8C48A; } }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0b0d12; --bg2:#11151d; --card:#151a23; --text:#e9edf5; --mute:#9aa4b6; --line:#232a36;
+            --accent:#9ccc65; --accent2:#8fb0ff; --shadow:0 10px 30px rgba(0,0,0,.35); }
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; scroll-padding-top:72px; }
+  body { margin:0; background:var(--bg); color:var(--text); line-height:1.8;
+         font-family:-apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+         -webkit-font-smoothing:antialiased; }
+  a { color:var(--accent); }
+  img { max-width:100%; height:auto; }
+  .wrap { max-width:1040px; margin:0 auto; padding:0 24px; }
+  /* 上の帯 */
+  .top { position:sticky; top:0; z-index:10; backdrop-filter:saturate(180%) blur(14px); -webkit-backdrop-filter:saturate(180%) blur(14px);
+         background:color-mix(in srgb, var(--bg) 82%, transparent); border-bottom:1px solid var(--line); }
+  .top .wrap { display:flex; align-items:center; gap:16px; height:56px; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:700; text-decoration:none; color:var(--text); white-space:nowrap; }
+  .brand img { width:28px; height:28px; border-radius:7px; }
+  .top nav { margin-left:auto; display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; }
+  .top nav a { color:var(--mute); text-decoration:none; font-size:.88rem; padding:6px 10px; border-radius:8px; white-space:nowrap; }
+  .top nav a:hover { color:var(--text); background:var(--bg2); }
+  /* 先頭 */
+  .hero { position:relative; overflow:hidden; text-align:center; padding:72px 0 40px; }
+  .hero::before { content:""; position:absolute; inset:-30% -10% auto; height:120%; z-index:-1; filter:blur(20px);
+    background:radial-gradient(40% 45% at 30% 35%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+               radial-gradient(35% 40% at 72% 30%, color-mix(in srgb, var(--accent2) 18%, transparent), transparent 70%); }
+  .hero .icon { width:112px; height:112px; border-radius:25px; box-shadow:var(--shadow); }
+  .hero h1 { font-size:clamp(2.4rem, 6vw, 3.6rem); line-height:1.15; margin:20px 0 4px; letter-spacing:-.01em; font-weight:800; }
+  .hero .yomi { color:var(--mute); font-size:.9rem; margin:0; }
+  .hero .sub { font-size:clamp(1.15rem, 2.6vw, 1.5rem); font-weight:700; margin:14px 0 10px;
+    background:linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero .lead { max-width:36em; margin:0 auto; color:var(--mute); }
+  .chips { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; margin:20px 0 0; padding:0; list-style:none; }
+  .chips li { font-size:.82rem; font-weight:600; color:var(--mute); border:1px solid var(--line); background:var(--card); border-radius:999px; padding:3px 12px; }
+  .btns { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin:28px 0 0; }
+  .btn { display:inline-flex; align-items:center; gap:8px; font-weight:700; text-decoration:none; border-radius:12px; padding:12px 22px; }
+  .btn.primary { background:var(--text); color:var(--bg); }
+  .btn.ghost { border:1px solid var(--line); color:var(--text); background:var(--card); }
+  .btn:hover { opacity:.88; }
+  .shot-hero { margin:48px auto 0; max-width:960px; }
+  .shot-hero img, .gallery img { display:block; width:100%; border-radius:12px; border:1px solid var(--line); box-shadow:var(--shadow); }
+  .note { max-width:44em; margin:28px auto 0; font-size:.88rem; color:var(--mute); text-align:center; }
+  /* 節 */
+  section.block { padding:64px 0; }
+  section.block.alt { background:var(--bg2); }
+  .eyebrow { display:block; text-align:center; font-size:.78rem; font-weight:700; letter-spacing:.12em; color:var(--accent); margin:0 0 6px; }
+  h2 { text-align:center; font-size:clamp(1.5rem, 3.4vw, 2rem); line-height:1.35; margin:0 0 12px; }
+  .intro { text-align:center; color:var(--mute); max-width:38em; margin:0 auto 36px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:16px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px 22px 18px; }
+  .card .ic { display:inline-grid; place-items:center; width:40px; height:40px; border-radius:11px; font-size:1.2rem;
+              background:color-mix(in srgb, var(--accent) 14%, transparent); }
+  .card h3 { font-size:1.06rem; margin:12px 0 6px; line-height:1.5; }
+  .card p { margin:0; color:var(--mute); font-size:.94rem; }
+  .card .tag { display:inline-block; font-size:.72rem; font-weight:700; color:var(--accent2); margin-left:6px; vertical-align:2px; }
+  .codes { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin:28px 0 0; padding:0; list-style:none; }
+  .codes li { font-family:Menlo, ui-monospace, monospace; font-size:.85rem; background:var(--code); color:var(--codetext); border-radius:8px; padding:4px 12px; }
+  /* 画面 */
+  .gallery { display:grid; grid-auto-flow:column; grid-auto-columns:min(82%, 720px); gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px 4px 16px; }
+  .gallery figure { margin:0; scroll-snap-align:center; }
+  .gallery.phone { grid-auto-columns:min(56%, 240px); }
+  .gallery figcaption { font-size:.88rem; color:var(--mute); margin-top:10px; text-align:center; }
+  .gallery-label { font-weight:700; margin:32px 0 12px; }
+  /* 使い方 */
+  .how { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:16px; }
+  .how .card h3 { margin-top:0; font-size:1.15rem; }
+  .how ol { margin:0; padding-left:1.3em; }
+  .how li { margin:0 0 8px; }
+  kbd { font-family:-apple-system, sans-serif; font-size:.82em; border:1px solid var(--line); border-bottom-width:2px; border-radius:6px; padding:0 6px; background:var(--bg2); }
+  .md-list { max-width:760px; margin:0 auto; padding-left:1.3em; }
+  .md-list li { margin:0 0 10px; }
+  .for { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:12px; max-width:860px; margin:0 auto; padding:0; list-style:none; }
+  .for li { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; font-weight:600; }
+  .for li::before { content:"✓"; color:var(--accent); margin-right:8px; }
+  /* よくある質問 */
+  .faq { max-width:780px; margin:0 auto; }
+  .faq details { background:var(--card); border:1px solid var(--line); border-radius:14px; margin:0 0 10px; }
+  .faq summary { cursor:pointer; list-style:none; padding:16px 48px 16px 20px; font-weight:700; position:relative; }
+  .faq summary::-webkit-details-marker { display:none; }
+  .faq summary::after { content:"+"; position:absolute; right:20px; top:50%; transform:translateY(-50%); font-size:1.3rem; color:var(--mute); }
+  .faq details[open] summary::after { content:"−"; }
+  .faq .a { padding:0 20px 16px; color:var(--mute); }
+  .faq .a p { margin:0 0 8px; }
+  /* お問い合わせ */
+  .contact { max-width:640px; margin:0 auto; text-align:center; }
+  .contact .card { padding:28px; }
+  .contact p { margin:0 0 10px; }
+  .other-apps { max-width:780px; margin:0 auto !important; padding:56px 24px 0; }
+  .other-apps h2 { margin-bottom:4px; }
+  .other-apps > p { text-align:center; }
+  .other-apps ul { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:4px 20px; }
+  .other-apps li { line-height:1.5; }
+  footer { text-align:center; color:var(--mute); font-size:.85rem; padding:40px 24px 56px; margin-top:56px; border-top:1px solid var(--line); }
+  @media (max-width:640px) { .top nav { display:none; } .hero { padding-top:48px; } section.block { padding:48px 0; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+  .en { padding-top:24px; }
+  .en-sep { border:0; border-top:1px solid var(--line); margin:64px 0 0; }
+  .en .how { grid-template-columns:1fr; max-width:780px; margin:0 auto; }
+  .keys { display:grid; grid-template-columns:repeat(auto-fill, minmax(420px, 1fr)); gap:16px; align-items:start; }
+  .keys h3 { margin:0 0 10px; font-size:1.05rem; }
+  .keys table { width:100%; border-collapse:collapse; font-size:.92rem; }
+  .keys th { text-align:left; white-space:nowrap; padding:6px 14px 6px 0; vertical-align:top; font-weight:400; }
+  .keys td { padding:6px 0; color:var(--mute); border-bottom:1px solid var(--line); }
+  .keys tr:last-child td { border-bottom:0; }
+  .keys-note { text-align:center; color:var(--mute); font-size:.9rem; margin:20px auto 0; max-width:44em; }
+  @media (max-width:640px) { .keys { grid-template-columns:1fr; } }
+  .notecard { display:block; text-align:left; text-decoration:none; color:var(--text); transition:transform .15s ease; }
+  .notecard:hover { transform:translateY(-2px); }
+  .nc-site { display:inline-block; font-size:.75rem; font-weight:700; color:var(--bg); background:var(--text); border-radius:6px; padding:1px 8px; }
+  .nc-title { display:block; font-weight:700; font-size:1.1rem; line-height:1.5; margin:10px 0 6px; }
+  .nc-lead { display:block; color:var(--mute); font-size:.92rem; }
+  .nc-go { display:block; color:var(--accent); font-weight:700; margin-top:10px; }
+  .detail { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px; align-items:start; }
+  .detail .card h3 { margin-top:0; font-size:1.08rem; }
+  .detail .card p { color:var(--mute); font-size:.94rem; margin:0; }
+  .tag.free { color:var(--accent); } 
+  .recv { display:flex; gap:18px; align-items:center; max-width:780px; margin:0 auto 24px; }
+  .recv img { width:72px; height:72px; border-radius:16px; flex:none; }
+  .recv p { margin:0 0 6px; color:var(--mute); }
+  .dl-note { color:var(--mute); font-size:.85rem; margin:8px 0 0; }
 </style>
 <!-- リンクを貼ったときに出る紹介カード（OGP） -->
 <meta property="og:type" content="website">
@@ -36,12 +147,56 @@
 <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
-<h1>事務電卓</h1>
-<p class="og-card"><img src="og.png" alt="事務電卓の紹介" width="1200" height="630" style="display:block;width:100%;max-width:720px;height:auto;border-radius:12px;margin:12px 0 24px;"></p>
-<p>事務電卓は、机の上の実務電卓と同じ使い勝手を iPhone / iPad / Mac に持ち込んだ電卓です。押した順に左から計算し、税込・税抜、%（割引・割増）、メモリー（M+ M- MR MC）、累計（GT）、00 キーを備えています。計算した数字はワンタップでコピーでき、他のアプリで使った数字を貼り付けて続きの計算もできます。勤務時間の合計や支払期日を出す「時間計算」「日数計算」も備えています。</p>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#"><img src="img/icon.png" alt="" width="28" height="28">事務電卓</a>
+  <nav aria-label="ページ内の移動"><a href="#features">特長</a><a href="#screens">画面</a><a href="#howto">使い方</a><a href="#pro">プロ機能</a><a href="#mac">Mac に送る</a><a href="#faq">よくある質問</a><a href="#contact">お問い合わせ</a></nav>
+</div></header>
 
-<h2>使い方</h2>
-<ol>
+<main>
+<section class="hero"><div class="wrap">
+  <img class="icon" src="img/icon.png" alt="事務電卓のアイコン" width="112" height="112">
+  <h1>事務電卓</h1>
+  <p class="sub">机の上の実務電卓を、そのまま手元に。</p>
+  <p class="lead">押した順に左から計算し、税込・税抜、%、メモリー、GT（累計）、00 キーを備えた電卓です。計算した数字はワンタップでコピー。勤務時間の合計や支払期日を出す「時間計算」「日数計算」も付いています。</p>
+  <ul class="chips"><li>iPhone</li><li>iPad</li><li>Mac</li><li>基本の機能は無料</li><li>プロ機能は買い切り</li></ul>
+  <div class="btns">
+    <a class="btn primary" href="https://apps.apple.com/jp/app/id6813061061">App Store で見る</a>
+    <a class="btn ghost" href="#howto">使い方を見る</a>
+  </div>
+  <div class="gallery phone" style="justify-content:center;grid-auto-columns:min(40%, 220px);margin-top:40px;">
+    <figure><img src="img/iphone-01.jpg" alt="事務電卓の画面" width="552" height="1200"></figure>
+    <figure><img src="img/iphone-02.jpg" alt="計算テープの画面" width="552" height="1200"></figure>
+    <figure><img src="img/iphone-03.jpg" alt="時間計算の画面" width="552" height="1200"></figure>
+  </div>
+</div></section>
+
+<section class="block alt" id="features"><div class="wrap">
+  <span class="eyebrow">FEATURES</span>
+  <h2>いつもの電卓の手順のまま</h2>
+  <p class="intro">優先順位を付けず、押した順に計算する。事務の現場で使ってきた電卓と同じ動きなので、手が迷いません。</p>
+  <div class="grid">
+    <div class="card"><span class="ic" aria-hidden="true">🧮</span><h3>押した順に計算</h3><p>実務電卓と同じく、押した順に左から計算。「=」を続けて押すと直前の計算を繰り返します（定数計算）。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">💴</span><h3>税込・税抜・%</h3><p>税率を掛けた金額・割った金額をボタン1つで。もう一度押すと税額に。税率は切り替え・登録ができます。割引・割増の % も。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">📋</span><h3>コピーと貼り付け</h3><p>表示中の数字を3桁区切りなしでコピー。ほかのアプリの数字を貼り付けて続きの計算も（「,」「¥」「円」は取り除いて読みます）。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">↩️</span><h3>戻る</h3><p>計算結果が変わる直前の状態へ、1つずつ戻せます。押し間違えても最初からやり直さずに済みます。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">⏱️</span><h3>時間計算・日数計算<span class="tag">無料</span></h3><p>勤務時間の合計、開始と終了からの働いた時間、日付の間の日数（営業日も）、支払期日まで。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">🧾</span><h3>計算テープと検算<span class="tag">プロ機能</span></h3><p>プリンター電卓の紙テープのように1行ずつ残し、途中の数を直して最後まで計算し直せます。PDF・CSV・印刷にも。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">📈</span><h3>原価・売価・利益率<span class="tag">プロ機能</span></h3><p>3つのうち2つを入れると、残りの1つを求めます。</p></div>
+    <div class="card"><span class="ic" aria-hidden="true">💻</span><h3>Mac の表へ送る</h3><p>iPhone で「送る」を押すと、Mac で選んでいる表のセルに数字が入ります（受け取り用の無料アプリを Mac に入れます）。</p></div>
+  </div>
+</div></section>
+
+<section class="block" id="screens"><div class="wrap">
+  <span class="eyebrow">SCREENS</span>
+  <h2>画面</h2>
+  <p class="intro">横にすべらせると、ほかの画面も見られます。</p>
+  <div class="gallery phone"><figure><img src="img/iphone-01.jpg" alt="" width="552" height="1200" loading="lazy"><figcaption>押した順に計算する電卓</figcaption></figure><figure><img src="img/iphone-06.jpg" alt="" width="552" height="1200" loading="lazy"><figcaption>税込の計算</figcaption></figure><figure><img src="img/iphone-02.jpg" alt="" width="552" height="1200" loading="lazy"><figcaption>計算テープ（プロ機能）</figcaption></figure><figure><img src="img/iphone-03.jpg" alt="" width="552" height="1200" loading="lazy"><figcaption>時間計算</figcaption></figure><figure><img src="img/iphone-04.jpg" alt="" width="552" height="1200" loading="lazy"><figcaption>日数計算</figcaption></figure><figure><img src="img/iphone-05.jpg" alt="" width="552" height="1200" loading="lazy"><figcaption>原価・売価・利益率（プロ機能）</figcaption></figure><figure><img src="img/iphone-09.jpg" alt="" width="552" height="1200" loading="lazy"><figcaption>配色を変えられる</figcaption></figure><figure><img src="img/iphone-10.jpg" alt="" width="552" height="1200" loading="lazy"><figcaption>やわらかい配色</figcaption></figure></div>
+</div></section>
+
+<section class="block alt" id="howto"><div class="wrap">
+  <span class="eyebrow">HOW TO</span>
+  <h2>使い方</h2>
+  <div class="how" style="grid-template-columns:1fr;max-width:860px;margin:0 auto 24px;"><div class="card"><ol>
   <li>数字と四則演算のキーで計算します。優先順位は無く、押した順に左から計算します。「=」を続けて押すと直前の演算を繰り返します（定数計算）。</li>
   <li>「税込」「税抜」で、表示中の数字に税率を掛けた（割った）金額を出します。もう一度押すと税額に切り替わります。税率は「税率」キーで切り替え、登録・削除は「メニュー」の「税率（%）」で行います。</li>
   <li>「コピー」で表示中の数字を 3 桁区切りなしでコピーします。「貼り付け」でクリップボードの数字を表示に入れます（「,」「¥」「円」は取り除いて読みます）。</li>
@@ -49,84 +204,80 @@
   <li>「メニュー」の「Mac に送る」をオンにすると「送る」ボタンが出て（「メニュー」は M+ の左へ移ります）、計算した数字を Mac の表のセルに直接入れられます（下の「Mac に送る」を参照）。</li>
   <li>「メニュー」から、計算の履歴、小数点以下の桁数と端数処理、税率、配色、キーの説明が見られます。</li>
   <li>「メニュー」の「計算の道具」から、時間計算・日数計算・原価と利益率の計算を開けます（下の「計算の道具」を参照）。</li>
-</ol>
+</ol></div></div>
+  <h2 id="tools" style="margin-top:48px;">計算の道具</h2>
+  <p class="intro">「メニュー」の「計算の道具」から開きます。</p>
+  <div class="detail">
+    <div class="card"><h3>時間計算（無料）</h3><p>時間と分を 1 行ずつ入れると、合計を「時間:分」と小数の時間（7 時間 30 分なら 7.5 時間）で出します。行の左の「＋」を押すと「−」に変わり、その行を引きます。開始と終了の時刻と休憩から、働いた時間も出せます。終了が開始より前のときは、日をまたいだものとして計算します。「電卓へ」を押すと、小数の時間を電卓に入れて、時給を掛けるなどの続きの計算ができます。</p></div>
+    <div class="card"><h3>日数計算（無料）</h3><p>2 つの日付の間の日数（土日祝を除いた営業日の数も）、何日後・何か月後の日付、締め日と支払日からの支払期日を出します。「初日も数える」をオンにすると、開始日と終了日の両方を数えます。日付は日本時間で数えます。</p></div>
+    <div class="card"><h3>原価・売価・利益率（プロ機能）</h3><p>原価・売価・利益率のうち 2 つを入れると、残りの 1 つを求めます。利益率は売価に対する利益の割合（粗利率）です。</p></div>
+  </div>
+</div></section>
 
-<h2 id="tools">計算の道具</h2>
-<dl>
-  <dt>時間計算（無料）</dt>
-  <dd>時間と分を 1 行ずつ入れると、合計を「時間:分」と小数の時間（7 時間 30 分なら 7.5 時間）で出します。行の左の「＋」を押すと「−」に変わり、その行を引きます。開始と終了の時刻と休憩から、働いた時間も出せます。終了が開始より前のときは、日をまたいだものとして計算します。「電卓へ」を押すと、小数の時間を電卓に入れて、時給を掛けるなどの続きの計算ができます。</dd>
-  <dt>日数計算（無料）</dt>
-  <dd>2 つの日付の間の日数（土日祝を除いた営業日の数も）、何日後・何か月後の日付、締め日と支払日からの支払期日を出します。「初日も数える」をオンにすると、開始日と終了日の両方を数えます。日付は日本時間で数えます。</dd>
-  <dt>原価・売価・利益率（プロ機能）</dt>
-  <dd>原価・売価・利益率のうち 2 つを入れると、残りの 1 つを求めます。利益率は売価に対する利益の割合（粗利率）です。</dd>
-</dl>
-
-<h2 id="pro">プロ機能（計算テープ・検算・原価と利益率）</h2>
-<p>次の機能は、一度だけ購入すると使えるようになる「プロ機能」です。月額ではありません。ほかの機能は購入しなくてもすべて使えます。</p>
-<ul>
+<section class="block" id="pro"><div class="wrap">
+  <span class="eyebrow">PRO</span>
+  <h2>プロ機能（計算テープ・検算・原価と利益率）</h2>
+  <p class="intro">次の機能は、一度だけ購入すると使えるようになる「プロ機能」です。月額ではありません。ほかの機能は購入しなくてもすべて使えます。</p>
+  <div class="how" style="grid-template-columns:1fr;max-width:860px;margin:0 auto;"><div class="card"><ul>
   <li><strong>計算テープ</strong>：プリンター電卓の紙テープのように、打った数と押したキーを 1 行ずつ残します。行を押すと品名などのメモを付けられます。右上のボタンから PDF・CSV での保存と共有、印刷ができます。</li>
   <li><strong>検算</strong>：テープの中の、自分で打った数の行（鉛筆の印が付いた行）を押して数を直すと、テープの最後まで計算し直します。直した結果は電卓の表示にも入ります。直す前に戻したいときは、電卓の「戻る」を押してください。</li>
   <li><strong>原価・売価・利益率</strong>：上の「計算の道具」を参照してください。</li>
-</ul>
-<p>購入は「メニュー」の「計算テープ」か「原価・売価・利益率」を開くと出る画面から行います。購入したときと同じ Apple アカウントなら、機種を変えたり入れ直したりしても、「購入を復元」で再び使えるようになります。</p>
+</ul><p style="color:var(--mute);font-size:.9rem;margin:10px 0 0;">購入は「メニュー」の「計算テープ」か「原価・売価・利益率」を開くと出る画面から行います。購入したときと同じ Apple アカウントなら、機種を変えたり入れ直したりしても、「購入を復元」で再び使えるようになります。</p></div></div>
+</div></section>
 
-<h2 id="mac">Mac に送る（事務電卓レシーバー）</h2>
-<p>iPhone / iPad の事務電卓で「送る」を押すと、Mac でいま選んでいるセル（Excel・Numbers・Google スプレッドシートなど）に計算した数字が入ります。Mac には受け取り用のアプリ「事務電卓レシーバー」（無料）を入れておきます。</p>
-<p>iPhone と Mac が同じ Wi-Fi にいればその Wi-Fi で、いなければ AirDrop と同じ仕組みで直接届きます。どちらを使うかは自動で選びます（両方の Wi-Fi がオンで、近くにあることが条件です）。</p>
-<p><a class="download" href="download/JimuDentakuReceiver.zip">事務電卓レシーバーをダウンロード（Mac 用）</a><br>
-<span class="note">macOS 14 以降。iPhone / iPad 側は事務電卓 1.2 以降が必要です。Apple の公証を受けたアプリです。</span></p>
-
-<h3>Mac に入れる</h3>
-<ol>
+<section class="block alt" id="mac"><div class="wrap">
+  <span class="eyebrow">SEND TO MAC</span>
+  <h2>Mac に送る（事務電卓レシーバー）</h2>
+  <div class="recv"><img src="img/receiver.png" alt="事務電卓レシーバーのアイコン" width="72" height="72"><div><p>iPhone / iPad の事務電卓で「送る」を押すと、Mac でいま選んでいるセル（Excel・Numbers・Google スプレッドシートなど）に計算した数字が入ります。Mac には受け取り用のアプリ「事務電卓レシーバー」（無料）を入れておきます。</p><p>iPhone と Mac が同じ Wi-Fi にいればその Wi-Fi で、いなければ AirDrop と同じ仕組みで直接届きます。どちらを使うかは自動で選びます（両方の Wi-Fi がオンで、近くにあることが条件です）。</p></div></div>
+  <div class="btns" style="margin:0 0 6px;"><a class="btn primary" href="download/JimuDentakuReceiver.zip">事務電卓レシーバーをダウンロード（Mac 用）</a></div>
+  <p class="dl-note" style="text-align:center;">macOS 14 以降。iPhone / iPad 側は事務電卓 1.2 以降が必要です。Apple の公証を受けたアプリです。</p>
+  <div class="how" style="margin-top:28px;">
+    <div class="card"><h3>Mac に入れる</h3><ol>
   <li>上のボタンでダウンロードし、「ダウンロード」フォルダの <strong>JimuDentakuReceiver.zip</strong> をダブルクリックして開きます。「事務電卓レシーバー」が出てきます。</li>
   <li>「事務電卓レシーバー」を Finder の「アプリケーション」フォルダへドラッグします（ダウンロードフォルダのまま使うと、許可の設定が保たれないことがあります）。</li>
   <li>「アプリケーション」フォルダで「事務電卓レシーバー」をダブルクリックします。インターネットから入手したアプリかを確かめる画面が出たら「開く」を押します。</li>
   <li>「アクセシビリティ」の許可を求められたら「システム設定を開く」を押し、一覧の「事務電卓レシーバー」のスイッチをオンにします。受け取った数字を他のアプリに入力するために必要です。</li>
   <li>画面上端のメニューバーに、四角に「#」のアイコンが出ていれば準備完了です。アイコンを押して「ログイン時に起動」をオンにしておくと、次から自動で起動します。</li>
-</ol>
-
-<h3>iPhone / iPad で使う</h3>
-<ol>
+</ol></div>    <div class="card"><h3>iPhone / iPad で使う</h3><ol>
   <li>事務電卓の「メニュー」で「Mac に送る」をオンにします。ローカルネットワークの許可を求められたら「許可」を押します。</li>
   <li>見つかった Mac の名前が一覧に出ます。複数あるときは送り先を選びます。</li>
   <li>Mac で数字を入れたいセルを選び、iPhone で「送る」を押します。</li>
   <li>初めて送ったときは、Mac に「受け取りますか？」と確認が出ます。「受け取る」を押してから、もう一度「送る」を押してください。次からは確認なしで入ります。</li>
-</ol>
-<p>数字を入れたあとに押すキー（下矢印・右矢印・Return・Tab・何も押さない）は、Mac のメニューバーのアイコンの「入力したあとに押すキー」で選べます。初めは下矢印で、Excel でも Google スプレッドシートでも下のセルへ移ります（スプレッドシートでは Return を押すとセルの編集が始まるため、矢印をおすすめします）。Mac に届かなかったときは、数字を iPhone のクリップボードに入れておくので、Mac で ⌘V で貼れます。</p>
+</ol></div>
+  </div>
+  <p class="keys-note">数字を入れたあとに押すキー（下矢印・右矢印・Return・Tab・何も押さない）は、Mac のメニューバーのアイコンの「入力したあとに押すキー」で選べます。初めは下矢印で、Excel でも Google スプレッドシートでも下のセルへ移ります（スプレッドシートでは Return を押すとセルの編集が始まるため、矢印をおすすめします）。Mac に届かなかったときは、数字を iPhone のクリップボードに入れておくので、Mac で ⌘V で貼れます。</p>
+</div></section>
 
-<h2>よくある質問</h2>
-<dl>
-  <dt>Q. 2 + 3 × 4 が 20 になります</dt>
-  <dd>A. 実務電卓と同じく、優先順位を付けずに押した順に計算する仕様です。2 + (3 × 4) を求めたいときは 3 × 4 を先に計算してから 2 を足してください。</dd>
-  <dt>Q. 「貼り付け」を押すと「ペーストを許可しますか」と聞かれます</dt>
-  <dd>A. iPhone / iPad では、他のアプリでコピーした内容を読むときに OS が確認を出します。アプリ側では止められません。毎回聞かれないようにするには、iPhone / iPad の「設定」で「事務電卓」を開き、「ほかのAppからペースト」を「許可」にしてください。</dd>
-  <dt>Q. 液晶の左上にクリップボードの数字を自動で出したい（iPhone / iPad）</dt>
-  <dd>A. 上の設定を「許可」にしたうえで、「メニュー」の「クリップボードの数字を自動で表示」をオンにしてください。Mac では設定なしで自動で表示されます。</dd>
-  <dt>Q. 割り算の結果が思ったより粗い</dt>
-  <dd>A. 「メニュー」で小数点以下の桁数を指定すると、途中の結果もその桁数に丸めます（実務電卓と同じ動きです）。細かい結果が欲しいときは桁数を「F」にしてください。</dd>
-  <dt>Q. アプリを開き直すと表示が 0 に戻っています</dt>
-  <dd>A. 仕様です。計算の状態と履歴は保存せず、起動するたびに 0 から始まります。税率や桁数などの設定は保存されます。</dd>
-  <dt>Q. 「Mac が見つかりません」と出ます</dt>
-  <dd>A. Mac で事務電卓レシーバーが起動しているか（メニューバーにアイコンがあるか）、iPhone と Mac の Wi-Fi がオンになっているかを確かめてください。iPhone では「設定」の「事務電卓」で「ローカルネットワーク」がオンになっている必要があります。</dd>
-  <dt>Q. 「Mac で受け取りを断られています」と出ます</dt>
-  <dd>A. 初回の確認で「断る」を押した場合です。Mac のメニューバーのアイコンから「受け取る端末」→「断った端末をすべて忘れる」を押し、もう一度送ってください。</dd>
-  <dt>Q. 事務電卓レシーバーを新しい版にしたい</dt>
-  <dd>A. メニューバーのアイコンから「事務電卓レシーバーを終了」を押し、上のボタンからダウンロードし直して、「アプリケーション」フォルダの古いものと置き換えてください。いまの版は、メニューバーのアイコンを押したときの一番下に出ます。置き換えたあとアイコンにびっくりマークが出たら、「システム設定」の「プライバシーとセキュリティ」→「アクセシビリティ」で、事務電卓レシーバーのスイッチを一度オフにしてからオンにしてください。</dd>
-  <dt>Q. 事務電卓レシーバーを取り除きたい</dt>
-  <dd>A. メニューバーのアイコンから「事務電卓レシーバーを終了」を押し、「アプリケーション」フォルダの「事務電卓レシーバー」をゴミ箱に入れてください。</dd>
-  <dt>Q. プロ機能を購入したのに使えません／機種を変えたら使えなくなりました</dt>
-  <dd>A. 「メニュー」の一番下にある「購入を復元」を押してください。購入したときと同じ Apple アカウントでサインインしている必要があります。</dd>
-  <dt>Q. 計算テープはいつ消えますか</dt>
-  <dd>A. 履歴と同じく、アプリを閉じると消えます。残しておきたいときは、テープの画面の右上のボタンから PDF か CSV で保存してください。</dd>
-  <dt>Q. 日数計算の祝日が実際と違います</dt>
-  <dd>A. 祝日は法律の決まりから計算しています。新しく決まった休日や、法律が変わった場合には、アプリの更新まで反映されないことがあります。お気づきの点はお問い合わせ先までお知らせください。</dd>
-  <dt>Q. 表示が E になりました</dt>
-  <dd>A. 12 桁を超えたか、0 で割ったときのエラー表示です。「AC」か「C」で解除してください。</dd>
-</dl>
+<section class="block" id="faq"><div class="wrap">
+  <span class="eyebrow">FAQ</span>
+  <h2>よくある質問</h2>
+  <div class="faq">
+    <details><summary>2 + 3 × 4 が 20 になります</summary><div class="a"><p>実務電卓と同じく、優先順位を付けずに押した順に計算する仕様です。2 + (3 × 4) を求めたいときは 3 × 4 を先に計算してから 2 を足してください。</p></div></details>
+    <details><summary>「貼り付け」を押すと「ペーストを許可しますか」と聞かれます</summary><div class="a"><p>iPhone / iPad では、他のアプリでコピーした内容を読むときに OS が確認を出します。アプリ側では止められません。毎回聞かれないようにするには、iPhone / iPad の「設定」で「事務電卓」を開き、「ほかのAppからペースト」を「許可」にしてください。</p></div></details>
+    <details><summary>液晶の左上にクリップボードの数字を自動で出したい（iPhone / iPad）</summary><div class="a"><p>上の設定を「許可」にしたうえで、「メニュー」の「クリップボードの数字を自動で表示」をオンにしてください。Mac では設定なしで自動で表示されます。</p></div></details>
+    <details><summary>割り算の結果が思ったより粗い</summary><div class="a"><p>「メニュー」で小数点以下の桁数を指定すると、途中の結果もその桁数に丸めます（実務電卓と同じ動きです）。細かい結果が欲しいときは桁数を「F」にしてください。</p></div></details>
+    <details><summary>アプリを開き直すと表示が 0 に戻っています</summary><div class="a"><p>仕様です。計算の状態と履歴は保存せず、起動するたびに 0 から始まります。税率や桁数などの設定は保存されます。</p></div></details>
+    <details><summary>「Mac が見つかりません」と出ます</summary><div class="a"><p>Mac で事務電卓レシーバーが起動しているか（メニューバーにアイコンがあるか）、iPhone と Mac の Wi-Fi がオンになっているかを確かめてください。iPhone では「設定」の「事務電卓」で「ローカルネットワーク」がオンになっている必要があります。</p></div></details>
+    <details><summary>「Mac で受け取りを断られています」と出ます</summary><div class="a"><p>初回の確認で「断る」を押した場合です。Mac のメニューバーのアイコンから「受け取る端末」→「断った端末をすべて忘れる」を押し、もう一度送ってください。</p></div></details>
+    <details><summary>事務電卓レシーバーを新しい版にしたい</summary><div class="a"><p>メニューバーのアイコンから「事務電卓レシーバーを終了」を押し、上のボタンからダウンロードし直して、「アプリケーション」フォルダの古いものと置き換えてください。いまの版は、メニューバーのアイコンを押したときの一番下に出ます。置き換えたあとアイコンにびっくりマークが出たら、「システム設定」の「プライバシーとセキュリティ」→「アクセシビリティ」で、事務電卓レシーバーのスイッチを一度オフにしてからオンにしてください。</p></div></details>
+    <details><summary>事務電卓レシーバーを取り除きたい</summary><div class="a"><p>メニューバーのアイコンから「事務電卓レシーバーを終了」を押し、「アプリケーション」フォルダの「事務電卓レシーバー」をゴミ箱に入れてください。</p></div></details>
+    <details><summary>プロ機能を購入したのに使えません／機種を変えたら使えなくなりました</summary><div class="a"><p>「メニュー」の一番下にある「購入を復元」を押してください。購入したときと同じ Apple アカウントでサインインしている必要があります。</p></div></details>
+    <details><summary>計算テープはいつ消えますか</summary><div class="a"><p>履歴と同じく、アプリを閉じると消えます。残しておきたいときは、テープの画面の右上のボタンから PDF か CSV で保存してください。</p></div></details>
+    <details><summary>日数計算の祝日が実際と違います</summary><div class="a"><p>祝日は法律の決まりから計算しています。新しく決まった休日や、法律が変わった場合には、アプリの更新まで反映されないことがあります。お気づきの点はお問い合わせ先までお知らせください。</p></div></details>
+    <details><summary>表示が E になりました</summary><div class="a"><p>12 桁を超えたか、0 で割ったときのエラー表示です。「AC」か「C」で解除してください。</p></div></details>
+  </div>
+</div></section>
 
-<h2>お問い合わせ</h2>
-<p>不具合のご報告やご要望は <a href="mailto:emc.hs07@gmail.com">emc.hs07@gmail.com</a> までお寄せください。</p>
-<p><a href="privacy.html">プライバシーポリシー</a></p>
+<section class="block alt" id="contact"><div class="wrap contact">
+  <span class="eyebrow">CONTACT</span>
+  <h2>お問い合わせ</h2>
+  <div class="card">
+    <p>不具合のご報告やご要望は、メールでお気軽にどうぞ。</p>
+    <p><a class="btn ghost" href="mailto:emc.hs07@gmail.com">emc.hs07@gmail.com</a></p>
+    <p style="font-size:.9rem;color:var(--mute);margin:14px 0 0;">くわしくは <a href="privacy.html">プライバシーポリシー</a> をご覧ください。</p>
+  </div>
+</div></section>
+</main>
 
 <!-- この作者のほかのアプリ（ここから） -->
 <section class="other-apps" style="margin-top:3rem;">
